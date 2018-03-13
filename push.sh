@@ -51,9 +51,9 @@ pre_dir=$0
 repo_path=$(cd $(dirname $0); pwd)
 username=ytyaru0
 [0 -lt $#] && username=$1
-echo pre_dir
-echo repo_path
-echo pre_dir
+echo $pre_dir
+echo $repo_path
+echo $username
 CheckArguments
 
 pass_mail=(`GetPassMail $username`)
