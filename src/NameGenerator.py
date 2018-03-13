@@ -1,4 +1,5 @@
 import glob
+import os.path
 
 class NameGenerator:
     def __init__(self, path):
@@ -8,6 +9,7 @@ class NameGenerator:
 
     def Generate(self, ext=None):
         self.__GetFileNames(ext)
+        print(self.__files)
         return self.__FindMin(0)
 
     def __GetFileNames(self, ext):
@@ -16,13 +18,15 @@ class NameGenerator:
             if ext.startswith('.'): reg += ext
             else: reg += '.{}'.format(ext)
         self.__files.clear()
-        for path in glob.glob(self.__path, reg):
+        for path in glob.glob(os.path.join(self.__path, reg)):
+#        for path in glob.glob(self.__path, reg):
             self.__files.append(os.path.splitext(os.path.basename(path))[0])
         sorted(self.__files)
 
     def __FindMin(self, count:int):
+        print('count:', count)
         for f in self.__files:
-            if f == self.__GetCountName(count): self.__FindMin((count+1))
+            if f == self.__GetCountName(count): return self.__FindMin((count+1))
         return self.__GetCountName(count)
 
     def __GetCountName(self, count:int):
@@ -33,5 +37,9 @@ class NameGenerator:
 
 if __name__ == '__main__':
     import sys
-    print(NameGenerator(sys.argv[0]).Generate(sys.argv[1]))
+    if len(sys.argv) < 2: raise Exception('起動引数が足りません。存在するディレクトリのパスを渡して下さい。')
+    path = sys.argv[1]
+    ext = None
+    if 2 < len(sys.argv): ext = sys.argv[2]
+    print(NameGenerator(path).Generate(ext))
 
