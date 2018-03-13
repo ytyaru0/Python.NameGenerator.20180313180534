@@ -44,22 +44,14 @@ function OverwriteConfig() {
 
 # $1 対象リポジトリのフルパス
 # $2 Githubユーザ名
-#pre_dir=$0
-#repo_path=$1
-#username=$2
 pre_dir=$0
-repo_path=$(cd $(dirname $0); pwd)
-username=ytyaru0
-[ 0 -lt $# ] && username=$1
-echo $pre_dir
-echo $repo_path
-echo $username
+repo_path=$1
+username=$2
 CheckArguments
 
 pass_mail=(`GetPassMail $username`)
 password=${pass_mail[0]}
 mailaddr=${pass_mail[1]}
-echo $pass_mail
 CheckPassword
 
 git config --local user.name $username
