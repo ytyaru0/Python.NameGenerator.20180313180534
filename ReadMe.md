@@ -14,17 +14,26 @@
 python3 NamgeGenerator.py {dir}
 ```
 ```sh
-python3 NamgeGenerator.py {dir} {ext}
+python3 NamgeGenerator.py {dir} -e {ext}
 ```
+
+## 位置引数
 
 項目|説明|例
 ----|----|--
 `{dir}`|`/tmp/`|対象ディレクトリのフルパス
-`{ext}`|`py`|拡張子
 
-# 結果
+## オプション引数
 
-テキストを返す。`echo`する。`sh`スクリプトで取得して利用する。
+略|全|意味|default|
+--|--|----|-------|
+-e|--extension|対象ファイルの拡張子|なし
+-r|--radix|基数|`36`
+-a|--alignment|桁合わせ|`False`
+
+## 結果
+
+名前テキストを返す。`print`する。`sh`スクリプトで取得して利用することを想定。
 
 # 予定する機能
 
