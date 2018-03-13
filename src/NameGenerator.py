@@ -2,23 +2,23 @@ import glob
 import os.path
 
 class NameGenerator:
-    def __init__(self, path):
-        self.__path = path
+    def __init__(self, args):
+        self.__args = args
         self.__files = []
-        if not os.path.isdir(path): raise Exception('存在するディレクトリのパスを指定して下さい。: {}'.format(path))
+        if not os.path.isdir(self.__args.path_dir_target): raise Exception('存在するディレクトリのパスを指定して下さい。: {}'.format(self.__args.path_dir_target))
 
-    def Generate(self, ext=None):
-        self.__GetFileNames(ext)
+    def Generate(self):
+        self.__GetFileNames()
         print(self.__files)
         return self.__FindMin(0)
 
-    def __GetFileNames(self, ext):
+    def __GetFileNames(self):
         reg = '*'
-        if ext is not None:
-            if ext.startswith('.'): reg += ext
-            else: reg += '.{}'.format(ext)
+        if self.__args.extension is not None:
+            if self.__args.extension.startswith('.'): reg += self.__args.extension
+            else: reg += '.{}'.format(self.__args.extension)
         self.__files.clear()
-        for path in glob.glob(os.path.join(self.__path, reg)):
+        for path in glob.glob(os.path.join(self.__args.path_dir_target, reg)):
             self.__files.append(os.path.splitext(os.path.basename(path))[0])
         sorted(self.__files)
 
@@ -35,23 +35,15 @@ class NameGenerator:
 
 
 if __name__ == '__main__':
-    """
-    import sys
-    if len(sys.argv) < 2: raise Exception('起動引数が足りません。存在するディレクトリのパスを渡して下さい。')
-    path = sys.argv[1]
-    ext = None
-    if 2 < len(sys.argv): ext = sys.argv[2]
-    print(NameGenerator(path).Generate(ext))
-    """
     import argparse
     parser = argparse.ArgumentParser(
         description='NameGenerator.',
     )
     parser.add_argument('path_dir_target')
-    parser.add_argument('-e', '--extension')    # 拡張子
-    parser.add_argument('-r', '--radix')        # 基数
-    parser.add_argument('-a', '--alignment', action='store_true') # 桁合わせ
+    parser.add_argument('-e', '--extension')                                        # 拡張子
+    parser.add_argument('-r', '--radix', default=10)                                # 基数
+    parser.add_argument('-a', '--alignment', action='store_true', default=False)    # 桁合わせ
     args = parser.parse_args()
     if args.path_dir_target is None: raise Exception('起動引数が足りません。存在するディレクトリのパスを渡して下さい。')
-    print(NameGenerator(args.path_dir_target).Generate(args.extension))
+    print(NameGenerator(args).Generate())
 
