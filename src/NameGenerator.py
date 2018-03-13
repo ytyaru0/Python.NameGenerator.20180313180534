@@ -35,10 +35,23 @@ class NameGenerator:
 
 
 if __name__ == '__main__':
+    """
     import sys
     if len(sys.argv) < 2: raise Exception('起動引数が足りません。存在するディレクトリのパスを渡して下さい。')
     path = sys.argv[1]
     ext = None
     if 2 < len(sys.argv): ext = sys.argv[2]
     print(NameGenerator(path).Generate(ext))
+    """
+    import argparse
+    parser = argparse.ArgumentParser(
+        description='NameGenerator.',
+    )
+    parser.add_argument('path_dir_target')
+    parser.add_argument('-e', '--extension')    # 拡張子
+    parser.add_argument('-r', '--radix')        # 基数
+    parser.add_argument('-a', '--alignment', action='store_true') # 桁合わせ
+    args = parser.parse_args()
+    if args.path_dir_target is None: raise Exception('起動引数が足りません。存在するディレクトリのパスを渡して下さい。')
+    print(NameGenerator(args.path_dir_target).Generate(args.extension))
 
