@@ -19,7 +19,6 @@ class NameGenerator:
             else: reg += '.{}'.format(ext)
         self.__files.clear()
         for path in glob.glob(os.path.join(self.__path, reg)):
-#        for path in glob.glob(self.__path, reg):
             self.__files.append(os.path.splitext(os.path.basename(path))[0])
         sorted(self.__files)
 
