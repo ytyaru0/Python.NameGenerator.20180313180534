@@ -59,6 +59,7 @@ CheckArguments
 pass_mail=(`GetPassMail $username`)
 password=${pass_mail[0]}
 mailaddr=${pass_mail[1]}
+echo $pass_mail
 CheckPassword
 
 git config --local user.name $username
