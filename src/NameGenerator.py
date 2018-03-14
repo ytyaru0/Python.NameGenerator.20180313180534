@@ -35,6 +35,7 @@ class NameGenerator:
         #else: raise Exception('未実装。count={}以上の値でファイル名を作れません。'.format(count))
         if 10 == self.__args.radix: return self.__GetCountName10(0)
         elif 16 == self.__args.radix: return self.__GetCountName16(0)
+        elif 26 == self.__args.radix: return self.__GetCountName26(0)
         elif 36 == self.__args.radix: return self.__GetCountName36(0)
         else: raise Exception('未実装。基数が {} では値を作れません。'.format(args.radix))
 
@@ -42,23 +43,22 @@ class NameGenerator:
     def __GetCountName16(self, count:int): return '{:x}'.format(count)
     def __GetCountName26(self, count:int):
         base = string.ascii_lowercase
-        if count < len(base): return (base)[n]
+        if count < len(base): return (base)[count]
         else: return GetCountName26(count // len(base)) + (base)[count % len(base)]
     # https://teratail.com/questions/95208
     def __GetCountName36(self, count:int):
-        base36 = string.digits + string.ascii_lowercase
-        if count < len(base36): return (base36)[n]
-        else: return GetCountName36(count // len(base36)) + (base36)[count % len(base36)]
+        base = string.digits + string.ascii_lowercase
+        if count < len(base): return (base)[count]
+        else: return GetCountName36(count // len(base)) + (base)[count % len(base)]
 
     # count値とfiles数が一致した時（ディレクトリ配下がすべてこのツールで作成された名前のファイルと思われるとき）
     def __Alignment(self, count):
         if self.__args.alignment and count == len(self.__files):
+            fig = (math.log(count, self.__args.radix) + 1)
             if 10 == self.__args.radix or 16 == self.__args.radix or 36 == self.__args.radix:
-                
-                self.__AppendAlignment(0*num)
+                self.__AppendAlignment('0'*fig)
             elif 26 == self.__args.radix:
-                self.__AppendAlignment(0*num)
-
+                self.__AppendAlignment('a'*fig)
     def __AppendAlignment(self, prefix):
         import os
         for f in self.__files:
@@ -66,7 +66,6 @@ class NameGenerator:
             name, ext = os.path.splitext(os.path.basename(f))
             name = prefix + name
             os.rename(f, os.path.join(d, name+ext))
-        
 
 
 if __name__ == '__main__':
