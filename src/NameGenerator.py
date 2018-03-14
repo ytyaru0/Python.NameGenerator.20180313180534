@@ -33,18 +33,40 @@ class NameGenerator:
         #if -1 < count and count < 10: return str(count)
         #elif 9 < count and count < 37: return chr(97 + (count - 10))
         #else: raise Exception('未実装。count={}以上の値でファイル名を作れません。'.format(count))
-        if 10 == args.radix: return self.__GetCountName10(0)
-        elif 16 == args.radix: return self.__GetCountName16(0)
-        elif 36 == args.radix: return self.__GetCountName36(0)
+        if 10 == self.__args.radix: return self.__GetCountName10(0)
+        elif 16 == self.__args.radix: return self.__GetCountName16(0)
+        elif 36 == self.__args.radix: return self.__GetCountName36(0)
         else: raise Exception('未実装。基数が {} では値を作れません。'.format(args.radix))
 
     def __GetCountName10(self, count:int): return str(count)
     def __GetCountName16(self, count:int): return '{:x}'.format(count)
+    def __GetCountName26(self, count:int):
+        base = string.ascii_lowercase
+        if count < len(base): return (base)[n]
+        else: return GetCountName26(count // len(base)) + (base)[count % len(base)]
     # https://teratail.com/questions/95208
     def __GetCountName36(self, count:int):
         base36 = string.digits + string.ascii_lowercase
         if count < len(base36): return (base36)[n]
         else: return GetCountName36(count // len(base36)) + (base36)[count % len(base36)]
+
+    # count値とfiles数が一致した時（ディレクトリ配下がすべてこのツールで作成された名前のファイルと思われるとき）
+    def __Alignment(self, count):
+        if self.__args.alignment and count == len(self.__files):
+            if 10 == self.__args.radix or 16 == self.__args.radix or 36 == self.__args.radix:
+                
+                self.__AppendAlignment(0*num)
+            elif 26 == self.__args.radix:
+                self.__AppendAlignment(0*num)
+
+    def __AppendAlignment(self, prefix):
+        import os
+        for f in self.__files:
+            d = os.path.dirname(f)
+            name, ext = os.path.splitext(os.path.basename(f))
+            name = prefix + name
+            os.rename(f, os.path.join(d, name+ext))
+        
 
 
 if __name__ == '__main__':
