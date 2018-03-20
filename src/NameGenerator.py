@@ -19,13 +19,17 @@ class NameGenerator:
                         64: string.digits + string.ascii_lowercase + string.ascii_uppercase + '_-',
                         # Win, Mac, Linuxでパスに使える記号を追加。使えない印字可能文字は\/:*?"<>|
                         85: string.digits + string.ascii_lowercase + string.ascii_uppercase + "!#$%&'()-=~^@`[]{};+,._"}
-
+    @property
+    def Characters(self): return self.__bases
     def Generate(self):
         self.__GetFileNames()
         count = len(self.__files)
         name = self.__GetCountName(count)
         self.__Alignment(count)
         return name
+        #if self.__args.extension is None: return name
+        #else: return name + '.' + self.__args.extension
+
 
     def __GetFileNames(self):
         reg = '*'
@@ -65,10 +69,11 @@ if __name__ == '__main__':
         description='NameGenerator.',
     )
     parser.add_argument('path_dir_target')
-    parser.add_argument('-e', '--extension')                                        # 拡張子
+    parser.add_argument('-e', '--extension', default=None)                          # 拡張子
     parser.add_argument('-r', '--radix', type=int, default=10)                      # 基数
     parser.add_argument('-a', '--alignment', action='store_true', default=False)    # 桁合わせ
     args = parser.parse_args()
     if args.path_dir_target is None: raise Exception('起動引数が足りません。存在するディレクトリのパスを渡して下さい。')
+    if args.extension is not None and 0 == len(args.extension.strip()): args.extension = None
     print(NameGenerator(args).Generate())
 
