@@ -22,7 +22,6 @@ class NameGenerator:
 
     def Generate(self):
         self.__GetFileNames()
-        print(self.__files)
         count = len(self.__files)
         name = self.__GetCountName(count)
         self.__Alignment(count)
